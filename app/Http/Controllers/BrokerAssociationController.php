@@ -78,45 +78,76 @@ class BrokerAssociationController extends Controller
     public function Update(Request $request)
     {
 
-         $updateQuery = DB::table('broker_association')
-             ->where('broker_association.broker_association_id', $request->broker_asociation_id)
-             ->update([
-                 'broker_association_name' => $request->broker_association_name,
+            $db=DB::table('broker')
 
-                 'contact_person' => $request->contact_person,
-                 'email_address' => $request->email_address,
-                 'phone_1' => $request->phone_1,
-                 'phone_2' => $request->phone_2,
+                ->where('broker.broker_asociation_id',$request->broker_asociation_id)
+                ->where('broker.status','Active')->get();
 
-                 'province_id' => $request->province_id,
 
-                'status' => $request->status,
-                 'unit_number' => $request->unit_number,
-                 'house_number' => $request->house_number,
-                 'street_name' => $request->street_name,
-                 'building_name' => $request->building_name,
-                 'subdivision_id' => $request->subdivision_id,
-                 'barangay_id' => $request->barangay_id,
-                 'town_id' => $request->town_id,
-                 'zip_code' => $request->zip_code,
+           if(count($db)>0){
+               $updateQuery1 = DB::table('broker_association')
+                   ->where('broker_association.broker_association_id', $request->broker_asociation_id)
+                   ->update([
+                       'broker_association_name' => $request->broker_association_name,
 
-                 'floor' => $request->floor,
-                 'created_by' => '1'
+                       'contact_person' => $request->contact_person,
+                       'email_address' => $request->email_address,
+                       'phone_1' => $request->phone_1,
+                       'phone_2' => $request->phone_2,
 
-             ]);
+                       'province_id' => $request->province_id,
 
-         if ($updateQuery > 0) {
+                       'status' => $request->status,
+                       'unit_number' => $request->unit_number,
+                       'house_number' => $request->house_number,
+                       'street_name' => $request->street_name,
+                       'building_name' => $request->building_name,
+                       'subdivision_id' => $request->subdivision_id,
+                       'barangay_id' => $request->barangay_id,
+                       'town_id' => $request->town_id,
+                       'zip_code' => $request->zip_code,
+
+                       'floor' => $request->floor,
+                       'created_by' => '1',
+                       'broker_association.status' => 'Active'
+                   ]);
+               return response()->json(['message'=>'Cannot change status']);
+           }
+
+           else {
+               $updateQuery = DB::table('broker_association')
+                   ->where('broker_association.broker_association_id', $request->broker_asociation_id)
+                   ->update([
+                       'broker_association_name' => $request->broker_association_name,
+
+                       'contact_person' => $request->contact_person,
+                       'email_address' => $request->email_address,
+                       'phone_1' => $request->phone_1,
+                       'phone_2' => $request->phone_2,
+
+                       'province_id' => $request->province_id,
+
+                       'status' => $request->status,
+                       'unit_number' => $request->unit_number,
+                       'house_number' => $request->house_number,
+                       'street_name' => $request->street_name,
+                       'building_name' => $request->building_name,
+                       'subdivision_id' => $request->subdivision_id,
+                       'barangay_id' => $request->barangay_id,
+                       'town_id' => $request->town_id,
+                       'zip_code' => $request->zip_code,
+
+                       'floor' => $request->floor,
+                       'created_by' => '1'
+
+                   ]);
+
+               if ($updateQuery > 0) {
 //
-             return response()->json(['message' => 'data updated'], 200);
-         }
+                   return response()->json(['message' => 'data updated'], 200);
+               }
+           }
      }
-
-
-
-
-
-
-
 
     //Delete user_skills
     public function Delete(Request $request)
