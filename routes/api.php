@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AgentController;
+use App\Http\Controllers\BrokerAssociationController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -246,6 +247,13 @@ Route::post('/deleteagency',[AgencyController::class,'Delete'])->name('deleteAge
 
 //Broker
 Route::get('GetBrokerWithoutPagination', [BrokerController::class, 'GetWithoutPagination']);
+
+//Broker Association
+
+    Route::get('/getbrokerassociation',[BrokerAssociationController::class,'Get'])->name('getbrokerassociation');
+    Route::post('/savebrokerassociation',[BrokerAssociationController::class,'Save'])->name('savebrokerassociation');
+    Route::post('/updatebrokerassociation',[BrokerAssociationController::class,'Update'])->name('updatebrokerassociation');
+    Route::post('/deletebrokerassociation',[BrokerAssociationController::class,'Delete'])->name('deletebrokerassociation');
 
 	//Product Mode
 
