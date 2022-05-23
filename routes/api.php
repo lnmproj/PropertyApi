@@ -238,6 +238,10 @@ Route::post('SaveUser', [UserController::class, 'Save']);
 
 //Agency
 Route::get('GetAgencyWithoutPagination', [AgencyController::class, 'GetWithoutPagination']);
+Route::get('/getagency',[AgencyController::class,'Get'])->name('Get');
+Route::post('/saveagency',[AgencyController::class,'Save'])->name('saveAgency');
+Route::post('/updateagency',[AgencyController::class,'Update'])->name('updateAgency');
+Route::post('/deleteagency',[AgencyController::class,'Delete'])->name('deleteAgency');
 
 
 //Broker
