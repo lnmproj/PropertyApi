@@ -179,29 +179,22 @@ class AgencyController extends Controller
     public function GetWithoutPagination(Request $request)
     {
 
-        $id = $request->id;
-        $status = $request->status;
-        $getQuery = DB::table("agency")->select(['agency_id', 'agency_name'])
-            ->orderBy('agency_id');
-        if (isset($id)) {
-            $getQuery->where('agency_id', '=', $id);
-            if (isset($status)) {
-                $getQuery->where('status', '=', $status);
-            } else {
-                $getQuery->where('status', '=', 'Active');
+        $sortColumn = $request->sortColumn;
+        $sortOrder = $request->sortOrder;
+        $searchText = $request->searchText;
 
-            }
-        } else {
-            if (isset($status)) {
-                $getQuery->where('status', '=', $status);
-            } else {
-                $getQuery->where('status', '=', 'Active');
+        $getQuery = DB::table("agency")->select(['*', DB::raw("IF(status = 'Active', 'Active','Inactive')as agent_skill_status")])
+            ->join('specialization','specialization.specialization_id','=','agency.specialization_id')
+            ->join('province','province.province_id','=','agency.province_id')
+            ->join('capability','capability.capability_id','=','agency.capability_id')
 
-            }
+            ->join('subdivisions','subdivisions.subdivision_id','=','agency.subdivision_id')
+            ->join('town','town.town_id','=','agency.town_id')
+            ->join('barangay','barangay.barangay_id','=','agency.barangay_id')
 
-        }
-
-        $getQuery = $getQuery->get();
+            ->where('agency.agency_name', 'like', '%' . $searchText . '%')
+            ->orderBy($sortColumn, $sortOrder)
+            ->get();
         return response()->json(['resultData' => $getQuery], 200);
     }
 }
