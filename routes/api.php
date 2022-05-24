@@ -247,7 +247,10 @@ Route::post('/deleteagency',[AgencyController::class,'Delete'])->name('deleteAge
 
 //Broker
 Route::get('GetBrokerWithoutPagination', [BrokerController::class, 'GetWithoutPagination']);
-
+    Route::get('/getbroker',[BrokerController::class,'Get'])->name('GetBroker');
+    Route::post('/savebroker',[BrokerController::class,'Save'])->name('savebroker');
+    Route::post('/updatebroker',[BrokerController::class,'Update'])->name('updatebroker');
+    Route::post('/deletebroker',[BrokerController::class,'Delete'])->name('deletebroker');
 //Broker Association
 
     Route::get('/getbrokerassociation',[BrokerAssociationController::class,'Get'])->name('getbrokerassociation');
