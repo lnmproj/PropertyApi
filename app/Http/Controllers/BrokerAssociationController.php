@@ -80,6 +80,7 @@ class BrokerAssociationController extends Controller
 
             $db=DB::table('broker')
 
+
                 ->where('broker.broker_asociation_id',$request->broker_asociation_id)
                 ->where('broker.status','Active')->get();
 
@@ -89,7 +90,6 @@ class BrokerAssociationController extends Controller
                    ->where('broker_association.broker_association_id', $request->broker_asociation_id)
                    ->update([
                        'broker_association_name' => $request->broker_association_name,
-
                        'contact_person' => $request->contact_person,
                        'email_address' => $request->email_address,
                        'phone_1' => $request->phone_1,
@@ -97,7 +97,7 @@ class BrokerAssociationController extends Controller
 
                        'province_id' => $request->province_id,
 
-                       'status' => $request->status,
+                       'status' => 'Active',
                        'unit_number' => $request->unit_number,
                        'house_number' => $request->house_number,
                        'street_name' => $request->street_name,

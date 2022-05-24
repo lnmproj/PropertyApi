@@ -166,11 +166,15 @@ class AgencyController extends Controller
     public function Delete(Request $request)
     {
 
-        $Id = $request->agency_id;
-        $deleteQuery = DB::table('agency')->where('agency.agency_id', $Id)->delete();
-        if ($deleteQuery > 0) {
+
+        $deleteQuery = DB::table('agency')->where('agency.agency_id', $request->agency_id)->count();
+
+        if ($deleteQuery>0) {
 
             return response()->json(['message' => 'Item deleted successfully'], 200);
+        }
+        else{
+            return response()->json(['message' => 'invalid parameter'], 200);
         }
     }
     //web end
