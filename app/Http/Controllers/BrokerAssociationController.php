@@ -31,6 +31,7 @@ class BrokerAssociationController extends Controller
             ->where('broker_association.broker_association_name', 'like', '%' . $searchText . '%')
             ->orderBy($sortColumn, $sortOrder)
             ->paginate($itemsPerPage);
+
         return response()->json(['resultData' => $getQuery], 200);
     }
 
