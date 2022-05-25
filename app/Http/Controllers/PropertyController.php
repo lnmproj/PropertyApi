@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 
 class PropertyController extends Controller
 {
+    //this api for website
     public function getProperty(Request $request){
         $return = ['status' => true, 'message' => ''];
         $all_images = PropertyImages::where('type','image');
@@ -172,6 +173,98 @@ public function  saveproperty(Request $request){
     }
 
 }
+//show properties on admin panel
+
+public function  allproperty(){
+    $getQuery = DB::table("property")->select(['*'])
+        ->join('property_images','property_images.property_id','=','property.id')
+        ->join('users','users.user_id','=','property.agent_id')
+//        ->join('province','province.province_id','=','broker_association.province_id')
+//        ->join('specialization','specialization.specialization_id','=','broker.specialization_id')
+//
+//        ->join('capability','capability.capability_id','=','capability.capability_id')
+//        ->join('town','town.town_id','=','broker.town_id')
+//        ->join('barangay','barangay.barangay_id','=','broker.barangay_id')
+//        ->where('users.role_id',26)
+       ->where('property_images.isDefault',true)
+        ->where('property_images.type','Image')
+
+
+     ->get();
+    return response()->json(['resultData' => $getQuery], 200);
+}
+
+public function  deleteproperty(Request  $request){
+    $deleteQuery = DB::table('property')->where('property.id', $request->property_id)->delete();
+    if ($deleteQuery > 0) {
+
+        return response()->json(['message' => 'Property deleted successfully'], 200);
+    }
+}
+
+    public function  deletepropertyimages(Request  $request){
+        $deleteQuery = DB::table('property_images')
+            ->where('property_images.property_id', $request->property_id)
+            ->where('property_images.id',$request->image_id)
+            ->delete();
+        if ($deleteQuery > 0) {
+
+            return response()->json(['message' => 'Property image deleted successfully'], 200);
+        }
+    }
+
+    public function updateproperty(Request $request)
+    {
+
+
+        $updateQuery = DB::table('property')
+            ->where('property.id', $request->property_id)
+            ->update([
+
+                'seller_name' => $request->seller_name,
+                'price_asked' => $request->price_asked,
+                'land_area' => $request->land_area,
+                'building_area' => $request->building_area,
+                'property_name' => $request->property_name,
+                'property_headline' => $request->property_headline,
+                'property_description' => $request->property_description,
+                'property_classification_id' => $request->property_classification_id,
+                'property_type_id' => $request->property_type_id,
+                'product_category_id' => $request->product_category_id,
+                'unit_no' => $request->unit_no,
+                'house_lot_no' => $request->house_lot_no,
+                'street_name' => $request->street_name,
+                'property_building_name' => $request->property_building_name,
+                'barangay_id' => $request->barangay_id,
+                'town_id' => $request->town_id,
+                'province_id' => $request->province_id,
+                'subdivision_id' => $request->subdivison_id,
+                'zipcode' => $request->zipcode,
+
+                'no_bedrooms' => $request->no_bedrooms,
+                'no_toilets' => $request->no_toilets,
+                'longitude' => $request->longitude,
+                'latitude' => $request->latitude,
+                'slug' => Str::slug($request->property_headline),
+                'garage' => $request->garage,
+                'cooling' => $request->cooling,
+                'heatingtype' => $request->heatingtype,
+                'elevator' => $request->elevator,
+                'freewifi' => $request->freewifi,
+                'exteriour' => $request->exteriour,
+                'kitchen' => $request->kitchen,
+                'year' => $request->year,
+                'isFeatured'=>$request->isFeatured,
+                'agent_id'=>$request->agent_id
+
+
+            ]);
+        if ($updateQuery > 0) {
+//
+            return response()->json(['message' => 'property updated'], 200);
+        }
+
+    }
 
 
 }
