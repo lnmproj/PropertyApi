@@ -314,6 +314,7 @@ Route::post('DeleteProductCategory', [
 
 Route::get('/getfeatured',[PropertyController::class,'getProperty'])->name('getProperty');
 Route::get('/allproperty',[PropertyController::class,'allProperty'])->name('allProperty');
+Route::post('/propertyimagesupload',[PropertyController::class,'propertyimagesupload'])->name('propertyimagesupload');
 Route::post('/deleteproperty',[PropertyController::class,'deleteproperty'])->name('deleteproperty');
 Route::post('/deletepropertyimages',[PropertyController::class,'deletepropertyimages'])->name('deletepropertyimages');
 Route::post('/updateproperty',[PropertyController::class,'updateproperty'])->name('updateproperty');

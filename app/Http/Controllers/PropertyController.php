@@ -140,38 +140,49 @@ public function  saveproperty(Request $request){
     if ($saveQuery > 0) {
         $id = $saveQuery;
 //for type= image
-        if($request->hasfile('images_video')) {
-                 foreach ($request->file('images_video') as $image){
-            $imageName = rand(1111, 9999) . time() . '.' . $image->getClientOriginalExtension();
-            $destinationPath = public_path('/uploads/featuredproperty/images');
-            $image->move($destinationPath, $imageName);
 
-            $saveQuery1 = DB::table('property_images')->insertGetId(
-                [
-
-                    'property_id' => $id,
-                    'images_video' => $imageName,
-                    'type' => $request->type,
-                    'isDefault' => $request->isDefault,
-                ]);
- }
-
-        }
-        //for type = video
-        else{
-            $saveQuery1 = DB::table('property_images')->insertGetId(
-                [
-
-                    'property_id' => $id,
-                    'images_video' => $request->images_video,
-                    'type' => 'Video',
-                    'isDefault' => 0
-                ]);
-
-        }
-        return response()->json(['message' => ' property  added successfully'], 200);
+        return response()->json(['property_id'=>$id,'message' => ' property  added successfully'], 200);
     }
 
+}
+public function  propertyimagesupload(Request  $request){
+        $property1=DB::table('property')->orderBy('id', 'DESC')->first();
+//        dd($id);
+    if($request->hasfile('images_video')) {
+
+        $imageName = rand(1111, 9999) . time() . '.' . $request->images_video->getClientOriginalExtension();
+        $destinationPath = public_path('/uploads/featuredproperty/images');
+        $request->images_video->move($destinationPath, $imageName);
+
+        $saveQuery1 = DB::table('property_images')->insertGetId(
+            [
+
+                'property_id' => $property1->id,
+                'images_video' => $imageName,
+                'type' => 'Image',
+                'isDefault' => $request->isDefault,
+            ]);
+
+
+    }
+    //for type = video
+    else{
+        $saveQuery1 = DB::table('property_images')->insertGetId(
+            [
+
+                'property_id' => $property1->id,
+                'images_video' => $request->images_video,
+                'type' => 'Video',
+                'isDefault' => 0
+            ]);
+
+    }
+    if ($saveQuery1 > 0) {
+        $id = $saveQuery1;
+//for type= image
+
+        return response()->json(['message' => 'image added successfully'], 200);
+    }
 }
 //show properties on admin panel
 
