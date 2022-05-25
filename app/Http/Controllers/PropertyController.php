@@ -5,6 +5,8 @@ use App\Models\Property;
 use Illuminate\Http\Request;
 use App\Models\PropertyImages;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class PropertyController extends Controller
 {
@@ -83,6 +85,93 @@ class PropertyController extends Controller
         return response()->json($return, 200);
 
       }
+
+
+public function  saveproperty(Request $request){
+
+
+    $saveQuery = DB::table('property')->insertGetId(
+        [
+
+
+            'seller_name' => $request->seller_name,
+            'price_asked' => $request->price_asked,
+            'land_area' => $request->land_area,
+
+            'building_area' => $request->building_area,
+            'property_name' => $request->property_name,
+            'property_headline' => $request->property_headline,
+            'property_description' => $request->property_description,
+            'property_classification_id' => $request->property_classification_id,
+            'property_type_id' => $request->property_type_id,
+            'product_category_id' => $request->product_category_id,
+            'unit_no' => $request->unit_no,
+            'house_lot_no' => $request->house_lot_no,
+            'street_name' => $request->street_name,
+            'property_building_name' => $request->property_building_name,
+            'barangay_id' => $request->barangay_id,
+            'town_id' => $request->town_id,
+            'province_id' => $request->province_id,
+            'subdivision_id' => $request->subdivison_id,
+            'zipcode' => $request->zipcode,
+
+            'no_bedrooms' => $request->no_bedrooms,
+            'no_toilets' => $request->no_toilets,
+            'longitude' => $request->longitude,
+            'latitude' => $request->latitude,
+            'slug' => Str::slug($request->property_headline),
+            'garage' => $request->garage,
+            'cooling' => $request->cooling,
+            'heatingtype' => $request->heatingtype,
+            'elevator' => $request->elevator,
+            'freewifi' => $request->freewifi,
+            'exteriour' => $request->exteriour,
+            'kitchen' => $request->kitchen,
+            'year' => $request->year,
+            'isFeatured'=>$request->isFeatured,
+             'agent_id'=>$request->agent_id
+
+
+
+
+        ]
+    );
+    if ($saveQuery > 0) {
+        $id = $saveQuery;
+//for type= image
+        if($request->hasfile('images_video')) {
+                 foreach ($request->file('images_video') as $image){
+            $imageName = rand(1111, 9999) . time() . '.' . $image->getClientOriginalExtension();
+            $destinationPath = public_path('/uploads/featuredproperty/images');
+            $image->move($destinationPath, $imageName);
+
+            $saveQuery1 = DB::table('property_images')->insertGetId(
+                [
+
+                    'property_id' => $id,
+                    'images_video' => $imageName,
+                    'type' => $request->type,
+                    'isDefault' => $request->isDefault,
+                ]);
+ }
+
+        }
+        //for type = video
+        else{
+            $saveQuery1 = DB::table('property_images')->insertGetId(
+                [
+
+                    'property_id' => $id,
+                    'images_video' => $request->images_video,
+                    'type' => 'Video',
+                    'isDefault' => 0
+                ]);
+
+        }
+        return response()->json(['message' => ' property  added successfully'], 200);
+    }
+
+}
 
 
 }

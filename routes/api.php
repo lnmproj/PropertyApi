@@ -313,6 +313,7 @@ Route::post('DeleteProductCategory', [
 
 
 Route::get('/getfeatured',[PropertyController::class,'getProperty'])->name('getProperty');
+Route::post('/saveproperty',[PropertyController::class,'saveproperty'])->name('saveProperty');
 Route::get('/agentapi',[AgentController::class,'agentapi'])->name('agentapi');
 Route::get('/allagents',[AgentController::class,'allagents'])->name('allagents');
 Route::get('/singleagents/{slug?}',[AgentController::class,'singleagents'])->name('singleagents');
