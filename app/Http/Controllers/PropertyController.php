@@ -181,7 +181,7 @@ public function  propertyimagesupload(Request  $request){
         $id = $saveQuery1;
 //for type= image
 
-        return response()->json(['message' => 'image added successfully'], 200);
+        return response()->json(['message' => 'image/video added successfully'], 200);
     }
 }
 //show properties on admin panel
@@ -224,9 +224,14 @@ public function  deleteproperty(Request  $request){
         }
     }
 
+
+
+
     public function updateproperty(Request $request)
     {
 
+
+        $find = PropertyImages::find(48);
 
         $updateQuery = DB::table('property')
             ->where('property.id', $request->property_id)
@@ -265,17 +270,19 @@ public function  deleteproperty(Request  $request){
                 'exteriour' => $request->exteriour,
                 'kitchen' => $request->kitchen,
                 'year' => $request->year,
-                'isFeatured'=>$request->isFeatured,
-                'agent_id'=>$request->agent_id
+                'isFeatured' => $request->isFeatured,
+                'agent_id' => $request->agent_id
 
 
             ]);
-        if ($updateQuery > 0) {
-//
-            return response()->json(['message' => 'property updated'], 200);
-        }
+
+    if($updateQuery>0) {
+        return response()->json(['message' => 'property updated'], 200);
+    }
 
     }
+
+
 
 
 }
