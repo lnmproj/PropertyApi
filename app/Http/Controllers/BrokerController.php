@@ -119,7 +119,7 @@ class BrokerController extends Controller
                     ]);
                 if ($updateQuery > 0) {
 //
-                    return response()->json(['message' => 'Broker  created'], 200);
+                    return response()->json(['message' => 'Broker  updated'], 200);
                 }
 
     }
@@ -128,19 +128,13 @@ class BrokerController extends Controller
     public function Delete(Request $request)
     {
 
-        if ($request->broker_asociation_id) {
-            $table = DB::table('broker')->where('broker_asociation_id', $request->broker_asociation_id)->count();
-            if ($table > 0) {
-                return response()->json(['message' => 'cannot delete the broker association associated with multiple brokers'], 200);
-            }
-            else {
-                $deleteQuery = DB::table('broker_association')->where('broker_association.broker_association_id', $request->broker_asociation_id)->delete();
+
+                $deleteQuery = DB::table('broker')->where('broker.broker_id', $request->broker_id)->delete();
                 if ($deleteQuery > 0) {
 
                     return response()->json(['message' => 'Item deleted successfully'], 200);
                 }
-            }
-        }
+
     }
     //web end
 
