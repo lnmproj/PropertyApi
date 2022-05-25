@@ -277,6 +277,35 @@ public function  deleteproperty(Request  $request){
             ]);
 
     if($updateQuery>0) {
+        if($request->hasfile('images_video')) {
+
+            $imageName = rand(1111, 9999) . time() . '.' . $request->images_video->getClientOriginalExtension();
+            $destinationPath = public_path('/uploads/featuredproperty/images');
+            $request->images_video->move($destinationPath, $imageName);
+
+            $saveQuery1 = DB::table('property_images')->insertGetId(
+                [
+
+                    'property_id' => $request->property_id,
+                    'images_video' => $imageName,
+                    'type' => 'Image',
+                    'isDefault' => $request->isDefault,
+                ]);
+
+
+        }
+        //for type = video
+        else{
+            $saveQuery1 = DB::table('property_images')->insertGetId(
+                [
+
+                    'property_id' => $request->property_id,
+                    'images_video' => $request->images_video,
+                    'type' => 'Video',
+                    'isDefault' => 0
+                ]);
+
+        }
         return response()->json(['message' => 'property updated'], 200);
     }
 
