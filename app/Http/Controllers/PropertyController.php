@@ -232,7 +232,11 @@ public function  deleteproperty(Request  $request){
     {
 
 
-        $find = PropertyImages::find($request->property_id);
+        $findimage = PropertyImages::where('id',$request->imageid)->where('property_id',$request->property_id)
+        ->where('type','Image')->first();
+//        dd($findimage);
+        $findvideo = PropertyImages::where('id',$request->imageid)->where('property_id',$request->property_id)
+            ->where('type','Video')->first();
 
         $updateQuery = DB::table('property')
             ->where('property.id', $request->property_id)
@@ -276,44 +280,48 @@ public function  deleteproperty(Request  $request){
 
 
             ]);
+        if($request->type=="Image") {
+            if (!empty($request->file('images_video'))) {
+                $imageName = rand(1111, 9999) . time() . '.' . $request->images_video->getClientOriginalExtension();
+                $destinationPath = public_path('/uploads/featuredproperty/images');
+                $request->images_video->move($destinationPath, $imageName);
 
-    if($updateQuery) {
-//        if($request->hasfile('images_video')) {
-//
-//            $imageName = rand(1111, 9999) . time() . '.' . $request->images_video->getClientOriginalExtension();
-//            $destinationPath = public_path('/uploads/featuredproperty/images');
-//            $request->images_video->move($destinationPath, $imageName);
-//
-//            $saveQuery1 = DB::table('property_images')->insertGetId(
-//                [
-//
-//                    'property_id' => $request->property_id,
-//                    'images_video' => $imageName,
-//                    'type' => 'Image',
-//                    'isDefault' => $request->isDefault,
-//                ]);
-//
-//
-//        }
-//        //for type = video
-//        else{
-//            $saveQuery1 = DB::table('property_images')->insertGetId(
-//                [
-//
-//                    'property_id' => $request->property_id,
-//                    'images_video' => $request->images_video,
-//                    'type' => 'Video',
-//                    'isDefault' => 0
-//                ]);
-//
-//        }
-        return response()->json(['message' => 'property updated'], 200);
-    }
+                $pro_photo = $imageName;
+
+            } else {
+                $pro_photo = $findimage->images_video;
+
+            }
+            $findimage->type = 'Image';
+
+            $findimage->images_video = $pro_photo;
+            $findimage->save();
+        }
+   if($request->type=="Video") {
+       if (!empty($request->videolink)) {
+
+           $pro_video = $request->videolink;
+
+       } else {
+           $pro_video = $findvideo->images_video;
+       }
+       $findvideo->type = 'Video';
+
+       $findvideo->images_video = $pro_video;
+       $findvideo->save();
+   }
+        return response()->json(['pro_photo'=>$pro_photo,'pro_video'=>$pro_video,'message' => 'property updated'], 200);
+
 
     }
     public  function  showallimagesvideo(Request  $request){
-        $db=DB::table('property_images')->where('property_id',$request->property_id)->get();
-        return response()->json(['resultdata'=>$db], 200);
+        $dbimage=DB::table('property_images')->where('property_id',$request->property_id)
+            ->where('type','Image')
+            ->get();
+        $dbvideo=DB::table('property_images')->where('property_id',$request->property_id)
+            ->where('type','Video')
+            ->get();
+        return response()->json(['Image'=>$dbimage,'Video'=>$dbvideo], 200);
     }
 
 
