@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class PropertyController extends Controller
-{
+{   public $main;
     //this api for website
     public function getProperty(Request $request){
         $return = ['status' => true, 'message' => ''];
@@ -138,15 +138,16 @@ public function  saveproperty(Request $request){
         ]
     );
     if ($saveQuery > 0) {
-        $id = $saveQuery;
+        $mainid = $saveQuery;
 //for type= image
 
-        return response()->json(['property_id'=>$id,'message' => ' property  added successfully'], 200);
+        return response()->json(['property_id'=>$mainid,'message' => ' property  added successfully'], 200);
     }
 
 }
 public function  propertyimagesupload(Request  $request){
-        $property1=DB::table('property')->orderBy('id', 'DESC')->first();
+        $property1=DB::table('property')
+            ->orderBy('id', 'DESC')->first();
 //        dd($id);
     if($request->hasfile('images_video')) {
 
@@ -171,7 +172,7 @@ public function  propertyimagesupload(Request  $request){
             [
 
                 'property_id' => $property1->id,
-                'images_video' => $request->images_video,
+                'images_video' => $request->video_link,
                 'type' => 'Video',
                 'isDefault' => 0
             ]);
@@ -231,7 +232,7 @@ public function  deleteproperty(Request  $request){
     {
 
 
-        $find = PropertyImages::find(48);
+        $find = PropertyImages::find($request->property_id);
 
         $updateQuery = DB::table('property')
             ->where('property.id', $request->property_id)
@@ -276,39 +277,43 @@ public function  deleteproperty(Request  $request){
 
             ]);
 
-    if($updateQuery>0) {
-        if($request->hasfile('images_video')) {
-
-            $imageName = rand(1111, 9999) . time() . '.' . $request->images_video->getClientOriginalExtension();
-            $destinationPath = public_path('/uploads/featuredproperty/images');
-            $request->images_video->move($destinationPath, $imageName);
-
-            $saveQuery1 = DB::table('property_images')->insertGetId(
-                [
-
-                    'property_id' => $request->property_id,
-                    'images_video' => $imageName,
-                    'type' => 'Image',
-                    'isDefault' => $request->isDefault,
-                ]);
-
-
-        }
-        //for type = video
-        else{
-            $saveQuery1 = DB::table('property_images')->insertGetId(
-                [
-
-                    'property_id' => $request->property_id,
-                    'images_video' => $request->images_video,
-                    'type' => 'Video',
-                    'isDefault' => 0
-                ]);
-
-        }
+    if($updateQuery) {
+//        if($request->hasfile('images_video')) {
+//
+//            $imageName = rand(1111, 9999) . time() . '.' . $request->images_video->getClientOriginalExtension();
+//            $destinationPath = public_path('/uploads/featuredproperty/images');
+//            $request->images_video->move($destinationPath, $imageName);
+//
+//            $saveQuery1 = DB::table('property_images')->insertGetId(
+//                [
+//
+//                    'property_id' => $request->property_id,
+//                    'images_video' => $imageName,
+//                    'type' => 'Image',
+//                    'isDefault' => $request->isDefault,
+//                ]);
+//
+//
+//        }
+//        //for type = video
+//        else{
+//            $saveQuery1 = DB::table('property_images')->insertGetId(
+//                [
+//
+//                    'property_id' => $request->property_id,
+//                    'images_video' => $request->images_video,
+//                    'type' => 'Video',
+//                    'isDefault' => 0
+//                ]);
+//
+//        }
         return response()->json(['message' => 'property updated'], 200);
     }
 
+    }
+    public  function  showallimagesvideo(Request  $request){
+        $db=DB::table('property_images')->where('property_id',$request->property_id)->get();
+        return response()->json(['resultdata'=>$db], 200);
     }
 
 

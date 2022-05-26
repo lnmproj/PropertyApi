@@ -319,6 +319,9 @@ Route::post('/deleteproperty',[PropertyController::class,'deleteproperty'])->nam
 Route::post('/deletepropertyimages',[PropertyController::class,'deletepropertyimages'])->name('deletepropertyimages');
 Route::post('/updateproperty',[PropertyController::class,'updateproperty'])->name('updateproperty');
 Route::post('/saveproperty',[PropertyController::class,'saveproperty'])->name('saveProperty');
+Route::post('/saveimagesupload',[PropertyController::class,'propertyimagesupload'])->name('propertyimagesupload');
+Route::get('/showallimagesvideo',[PropertyController::class,'showallimagesvideo'])->name('showallimagesvideo');
+
 Route::get('/agentapi',[AgentController::class,'agentapi'])->name('agentapi');
 Route::get('/allagents',[AgentController::class,'allagents'])->name('allagents');
 Route::get('/singleagents/{slug?}',[AgentController::class,'singleagents'])->name('singleagents');
