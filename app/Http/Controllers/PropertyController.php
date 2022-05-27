@@ -115,7 +115,7 @@ public function  saveproperty(Request $request){
             'province_id' => $request->province_id,
             'subdivision_id' => $request->subdivison_id,
             'zipcode' => $request->zipcode,
-
+            'select_floor_level' => $request->select_floor_level,
             'no_bedrooms' => $request->no_bedrooms,
             'no_toilets' => $request->no_toilets,
             'longitude' => $request->longitude,
@@ -130,16 +130,23 @@ public function  saveproperty(Request $request){
             'kitchen' => $request->kitchen,
             'year' => $request->year,
             'isFeatured'=>$request->isFeatured,
-             'agent_id'=>$request->agent_id
-
-
-
-
+             'agent_id'=>$request->agent_id,
+            'rental_price_asked'=>$request->rental_price_asked,
+            'minimum_rental_period'=>$request->minimum_rental_period,
+            'car_spaces'=>$request->car_spaces,
+            'date_of_month_rent_due'=>$request->date_of_month_rent_due,
+            'period_can_extend'=>$request->period_can_extend,
+            'date_rental_started'=>$request->date_rental_started,
+            'current_rental_expires'=>$request->current_rental_expires,
+            'rental_switch_on'=>$request->rental_switch_on,
+            'sale_price'=>$request->sale_price,
+            'price_per_sq_m'=>$request->price_per_sq_m,
+            'sale_switch_on'=>$request->sale_switch_on,
+            'agri_type'=>$request->agri_type,
         ]
     );
     if ($saveQuery > 0) {
         $mainid = $saveQuery;
-//for type= image
 
         return response()->json(['property_id'=>$mainid,'message' => ' property  added successfully'], 200);
     }
@@ -188,6 +195,9 @@ public function  propertyimagesupload(Request  $request){
 //show properties on admin panel
 
 public function  allproperty(){
+//    $itemsPerPage = $request->itemsPerPage;
+//    $sortColumn = $request->sortColumn;
+//    $sortOrder = $request->sortOrder;
     $getQuery = DB::table("property")->select(['*'])
         ->join('property_images','property_images.property_id','=','property.id')
         ->join('users','users.user_id','=','property.agent_id')
@@ -200,7 +210,8 @@ public function  allproperty(){
 //        ->where('users.role_id',26)
        ->where('property_images.isDefault',true)
         ->where('property_images.type','Image')
-
+//        ->orderBy($sortColumn, $sortOrder)
+//        ->paginate($itemsPerPage);
 
      ->get();
     return response()->json(['resultData' => $getQuery], 200);
@@ -276,41 +287,57 @@ public function  deleteproperty(Request  $request){
                 'kitchen' => $request->kitchen,
                 'year' => $request->year,
                 'isFeatured' => $request->isFeatured,
-                'agent_id' => $request->agent_id
+                'agent_id' => $request->agent_id,
+                'rental_price_asked'=>$request->rental_price_asked,
+                'minimum_rental_period'=>$request->minimum_rental_period,
+                'car_spaces'=>$request->car_spaces,
+                'date_of_month_rent_due'=>$request->date_of_month_rent_due,
+                'period_can_extend'=>$request->period_can_extend,
+                'date_rental_started'=>$request->date_rental_started,
+                'current_rental_expires'=>$request->current_rental_expires,
+                'rental_switch_on'=>$request->rental_switch_on,
+                'sale_price'=>$request->sale_price,
+                'price_per_sq_m'=>$request->price_per_sq_m,
+                'sale_switch_on'=>$request->sale_switch_on,
+                'agri_type'=>$request->agri_type,
 
 
             ]);
-        if($request->type=="Image") {
-            if (!empty($request->file('images_video'))) {
-                $imageName = rand(1111, 9999) . time() . '.' . $request->images_video->getClientOriginalExtension();
-                $destinationPath = public_path('/uploads/featuredproperty/images');
-                $request->images_video->move($destinationPath, $imageName);
 
-                $pro_photo = $imageName;
 
-            } else {
-                $pro_photo = $findimage->images_video;
+    if ($request->type == "Image") {
+        if (!empty($request->file('images_video'))) {
+            $imageName = rand(1111, 9999) . time() . '.' . $request->images_video->getClientOriginalExtension();
+            $destinationPath = public_path('/uploads/featuredproperty/images');
+            $request->images_video->move($destinationPath, $imageName);
 
-            }
-            $findimage->type = 'Image';
+            $pro_photo = $imageName;
 
-            $findimage->images_video = $pro_photo;
-            $findimage->save();
+        } else {
+            $pro_photo = $findimage->images_video;
+
         }
-   if($request->type=="Video") {
-       if (!empty($request->videolink)) {
+        $findimage->type = 'Image';
 
-           $pro_video = $request->videolink;
+        $findimage->images_video = $pro_photo;
 
-       } else {
-           $pro_video = $findvideo->images_video;
-       }
-       $findvideo->type = 'Video';
+        $findimage->save();
+    }
+    if ($request->type == "Video") {
+        if (!empty($request->videolink)) {
 
-       $findvideo->images_video = $pro_video;
-       $findvideo->save();
-   }
-        return response()->json(['pro_photo'=>$pro_photo,'pro_video'=>$pro_video,'message' => 'property updated'], 200);
+            $pro_video = $request->videolink;
+
+        } else {
+            $pro_video = $findvideo->images_video;
+        }
+        $findvideo->type = 'Video';
+
+        $findvideo->images_video = $pro_video;
+        $findvideo->save();
+    }
+
+        return response()->json(['message' => 'property updated'], 200);
 
 
     }
