@@ -153,9 +153,7 @@ public function  saveproperty(Request $request){
 
 }
 public function  propertyimagesupload(Request  $request){
-        $property1=DB::table('property')
-            ->orderBy('id', 'DESC')->first();
-//        dd($id);
+
     if($request->hasfile('images_video')) {
 
         $imageName = rand(1111, 9999) . time() . '.' . $request->images_video->getClientOriginalExtension();
@@ -165,7 +163,7 @@ public function  propertyimagesupload(Request  $request){
         $saveQuery1 = DB::table('property_images')->insertGetId(
             [
 
-                'property_id' => $property1->id,
+                'property_id' => $request->property_id,
                 'images_video' => $imageName,
                 'type' => 'Image',
                 'isDefault' => $request->isDefault,
@@ -178,7 +176,7 @@ public function  propertyimagesupload(Request  $request){
         $saveQuery1 = DB::table('property_images')->insertGetId(
             [
 
-                'property_id' => $property1->id,
+                'property_id' => $request->property_id,
                 'images_video' => $request->video_link,
                 'type' => 'Video',
                 'isDefault' => 0
