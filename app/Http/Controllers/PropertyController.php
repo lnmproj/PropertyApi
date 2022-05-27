@@ -304,39 +304,68 @@ public function  deleteproperty(Request  $request){
 
 
             ]);
+//      if(empty($findimage)){
+//          if($request->hasfile('images_video')) {
+//
+//              $imageName = rand(1111, 9999) . time() . '.' . $request->images_video->getClientOriginalExtension();
+//              $destinationPath = public_path('/uploads/featuredproperty/images');
+//              $request->images_video->move($destinationPath, $imageName);
+//
+//              $saveQuery1 = DB::table('property_images')->insertGetId(
+//                  [
+//
+//                      'property_id' => $request->property_id,
+//                      'images_video' => $imageName,
+//                      'type' => 'Image',
+//                      'isDefault' => $request->isDefault,
+//                  ]);
+//
+//
+//          }
+//      }
+//
+//      if(empty($findvideo)){
+//          $saveQuery1 = DB::table('property_images')->insertGetId(
+//              [
+//
+//                  'property_id' => $request->property_id,
+//                  'images_video' => $request->video_link,
+//                  'type' => 'Video',
+//                  'isDefault' => 0
+//              ]);
+//      }
 
-
-    if ($request->type == "Image") {
-        if (!empty($request->file('images_video'))) {
-            $imageName = rand(1111, 9999) . time() . '.' . $request->images_video->getClientOriginalExtension();
-            $destinationPath = public_path('/uploads/featuredproperty/images');
-            $request->images_video->move($destinationPath, $imageName);
-
-            $pro_photo = $imageName;
-
-        } else {
-            $pro_photo = $findimage->images_video;
-
-        }
-        $findimage->type = 'Image';
-
-        $findimage->images_video = $pro_photo;
-
-        $findimage->save();
-    }
-    if ($request->type == "Video") {
-        if (!empty($request->videolink)) {
-
-            $pro_video = $request->videolink;
-
-        } else {
-            $pro_video = $findvideo->images_video;
-        }
-        $findvideo->type = 'Video';
-
-        $findvideo->images_video = $pro_video;
-        $findvideo->save();
-    }
+//    if ($request->type == "Image") {
+//        if (!empty($request->file('images_video'))) {
+//            $imageName = rand(1111, 9999) . time() . '.' . $request->images_video->getClientOriginalExtension();
+//            $destinationPath = public_path('/uploads/featuredproperty/images');
+//            $request->images_video->move($destinationPath, $imageName);
+//
+//            $pro_photo = $imageName;
+//
+//        } else {
+//            $pro_photo = $findimage->images_video;
+//
+//        }
+//        $findimage->type = 'Image';
+//
+//        $findimage->images_video = $pro_photo;
+//
+//        $findimage->save();
+//    }
+//    if ($request->type == "Video") {
+//        if (!empty($request->videolink)) {
+//
+//            $pro_video = $request->videolink;
+//
+//        } else {
+//            $pro_video = $findvideo->images_video;
+//        }
+//        $findvideo->type = 'Video';
+//
+//        $findvideo->images_video = $pro_video;
+//        $findvideo->save();
+//    }
 
         return response()->json(['message' => 'property updated'], 200);
 
