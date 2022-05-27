@@ -201,13 +201,14 @@ public function  allproperty(){
     $getQuery = DB::table("property")->select(['*'])
         ->join('property_images','property_images.property_id','=','property.id')
         ->join('users','users.user_id','=','property.agent_id')
-//        ->join('province','province.province_id','=','broker_association.province_id')
-//        ->join('specialization','specialization.specialization_id','=','broker.specialization_id')
-//
-//        ->join('capability','capability.capability_id','=','capability.capability_id')
-//        ->join('town','town.town_id','=','broker.town_id')
-//        ->join('barangay','barangay.barangay_id','=','broker.barangay_id')
-//        ->where('users.role_id',26)
+        ->join('property_classification','property_classification.property_classification_id','=','property.property_classification_id')
+        ->join('product_category','product_category.product_category_id','=','property.product_category_id')
+        ->join('province','province.province_id','=','property.province_id')
+
+
+        ->join('subdivisions','subdivisions.subdivision_id','=','property.subdivision_id')
+        ->join('town','town.town_id','=','property.town_id')
+        ->join('barangay','barangay.barangay_id','=','property.barangay_id')
        ->where('property_images.isDefault',true)
         ->where('property_images.type','Image')
 //        ->orderBy($sortColumn, $sortOrder)
