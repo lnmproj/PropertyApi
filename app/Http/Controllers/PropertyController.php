@@ -132,7 +132,7 @@ public function  saveproperty(Request $request){
             'isFeatured'=>$request->isFeatured,
              'agent_id'=>$request->agent_id,
             'rental_price_asked'=>$request->rental_price_asked,
-            'minimum_rental_period'=>$request->minimum_rental_period,
+            'minimum_rental_period_rent'=>$request->minimum_rental_period_rent,
             'car_spaces_rent'=>$request->car_spaces_rent,
             'date_of_month_rent_due'=>$request->date_of_month_rent_due,
             'period_can_extend'=>$request->period_can_extend,
@@ -144,7 +144,8 @@ public function  saveproperty(Request $request){
             'sale_switch_on'=>$request->sale_switch_on,
             'agri_type'=>$request->agri_type,
             'car_spaces_uncovered_property'=>$request->car_spaces_uncovered_property,
-            'garage_spaces_covered_property'=>$request->garage_spaces_covered_property
+            'garage_spaces_covered_property'=>$request->garage_spaces_covered_property,
+            'minimum_rental_period_sale'=>$request->minimum_rental_period_sale,
         ]
     );
     if ($saveQuery > 0) {
