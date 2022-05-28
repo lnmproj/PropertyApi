@@ -169,6 +169,8 @@ public function  propertyimagesupload(Request  $request){
                 'property_id' => $request->property_id,
                 'images_video' => $imageName,
                 'type' => 'Image',
+                'description'=>$request->description,
+
                 'isDefault' => $request->isDefault,
             ]);
 
@@ -181,6 +183,7 @@ public function  propertyimagesupload(Request  $request){
 
                 'property_id' => $request->property_id,
                 'images_video' => $request->video_link,
+                'description'=>$request->description,
                 'type' => 'Video',
                 'isDefault' => 0
             ]);
