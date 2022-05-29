@@ -146,6 +146,8 @@ public function  saveproperty(Request $request){
             'car_spaces_uncovered_property'=>$request->car_spaces_uncovered_property,
             'garage_spaces_covered_property'=>$request->garage_spaces_covered_property,
             'minimum_rental_period_sale'=>$request->minimum_rental_period_sale,
+            'fireplace'=>$request->fireplace,
+            'swimming_pool'=>$request->swimming_pool,
         ]
     );
     if ($saveQuery > 0) {
@@ -169,8 +171,6 @@ public function  propertyimagesupload(Request  $request){
                 'property_id' => $request->property_id,
                 'images_video' => $imageName,
                 'type' => 'Image',
-                'description'=>$request->description,
-
                 'isDefault' => $request->isDefault,
             ]);
 
@@ -183,7 +183,6 @@ public function  propertyimagesupload(Request  $request){
 
                 'property_id' => $request->property_id,
                 'images_video' => $request->video_link,
-                'description'=>$request->description,
                 'type' => 'Video',
                 'isDefault' => 0
             ]);
