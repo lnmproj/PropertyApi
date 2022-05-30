@@ -197,12 +197,20 @@ public function  propertyimagesupload(Request  $request){
 }
 //show properties on admin panel
 
-public function  allproperty(){
-//    $itemsPerPage = $request->itemsPerPage;
-//    $sortColumn = $request->sortColumn;
-//    $sortOrder = $request->sortOrder;
-    $getQuery = DB::table("property")->select(['*'])
-        ->join('property_images','property_images.property_id','=','property.id')
+public function  allproperty(Request  $request){
+    $itemsPerPage = $request->itemsPerPage;
+    $sortColumn = $request->sortColumn;
+    $sortOrder = $request->sortOrder;
+    $getQuery = DB::table("property")->select(['property.id','property.seller_name','property.land_area','property.building_area','property.land_area','property.property_name','property.property_headline'
+        ,'property.property_description','property.price_asked','property.property_classification_id'
+    ,'property.property_type_id','property.product_category_id','property.unit_no','property.house_lot_no','property.street_name','property.property_building_name','property.town_id','property.province_id','property.barangay_id',
+        'property.subdivision_id','property.zipcode','property.select_floor_level','property.no_bedrooms','property.no_toilets','property.latitude'
+    ,'property.longitude','property.latitude','property.slug','property.garage','property.cooling','property.heatingtype','property.elevator',
+        'property.year','property.freewifi','property.exteriour','property.kitchen','property.isFeatured','property.agent_id','property.agri_type','property.rental_price_asked','property.minimum_rental_period_rent',
+        'property.car_spaces_rent','property.date_of_month_rent_due','property.period_can_extend','property.car_spaces_rent','property.date_rental_started','property.current_rental_expires','property.rental_switch_on'
+    ,'property.sale_price','property.sale_switch_on','property.price_per_sq_m','property.car_spaces_uncovered_property','property.garage_spaces_covered_property'
+    ,'property.minimum_rental_period_sale','property.fireplace','property.swimming_pool'])
+//        ->join('property_images','property_images.property_id','=','property.id')
         ->join('users','users.user_id','=','property.agent_id')
         ->join('property_classification','property_classification.property_classification_id','=','property.property_classification_id')
         ->join('product_category','product_category.product_category_id','=','property.product_category_id')
@@ -212,12 +220,12 @@ public function  allproperty(){
         ->join('subdivisions','subdivisions.subdivision_id','=','property.subdivision_id')
         ->join('town','town.town_id','=','property.town_id')
         ->join('barangay','barangay.barangay_id','=','property.barangay_id')
-       ->where('property_images.isDefault',true)
-        ->where('property_images.type','Image')
-//        ->orderBy($sortColumn, $sortOrder)
-//        ->paginate($itemsPerPage);
+//       ->where('property_images.isDefault',true)
+//        ->where('property_images.type','Image')
+        ->orderBy($sortColumn, $sortOrder)
+        ->paginate($itemsPerPage);
 
-     ->get();
+
     return response()->json(['resultData' => $getQuery], 200);
 }
 
