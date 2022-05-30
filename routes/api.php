@@ -1,10 +1,5 @@
 <?php
 
-use App\Http\Controllers\AgentController;
-use App\Http\Controllers\BrokerAssociationController;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\TownController;
 use App\Http\Controllers\UserController;
@@ -19,7 +14,7 @@ use App\Http\Controllers\CapabilityController;
 use App\Http\Controllers\UserSkillsController;
 use App\Http\Controllers\ProductModeController;
 use App\Http\Controllers\SubdivisionController;
-
+use App\Http\Controllers\AgentController;
 
 
 
@@ -29,6 +24,13 @@ use App\Http\Controllers\ZonningCodeController;
 use App\Http\Controllers\PropertyTypeController;
 use App\Http\Controllers\SpecializationController;
 use App\Http\Controllers\PropertyClassificationController;
+
+
+
+
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -238,25 +240,11 @@ Route::post('SaveUser', [UserController::class, 'Save']);
 
 
 //Agency
-Route::get('/GetAgencyWithoutPagination', [AgencyController::class, 'GetWithoutPagination']);
-Route::get('/getagency',[AgencyController::class,'Get'])->name('Get');
-Route::post('/saveagency',[AgencyController::class,'Save'])->name('saveAgency');
-Route::post('/updateagency',[AgencyController::class,'Update'])->name('updateAgency');
-Route::post('/deleteagency',[AgencyController::class,'Delete'])->name('deleteAgency');
+Route::get('GetAgencyWithoutPagination', [AgencyController::class, 'GetWithoutPagination']);
 
 
 //Broker
 Route::get('GetBrokerWithoutPagination', [BrokerController::class, 'GetWithoutPagination']);
-    Route::get('/getbroker',[BrokerController::class,'Get'])->name('GetBroker');
-    Route::post('/savebroker',[BrokerController::class,'Save'])->name('savebroker');
-    Route::post('/updatebroker',[BrokerController::class,'Update'])->name('updatebroker');
-    Route::post('/deletebroker',[BrokerController::class,'Delete'])->name('deletebroker');
-//Broker Association
-
-    Route::get('/getbrokerassociation',[BrokerAssociationController::class,'Get'])->name('getbrokerassociation');
-    Route::post('/savebrokerassociation',[BrokerAssociationController::class,'Save'])->name('savebrokerassociation');
-    Route::post('/updatebrokerassociation',[BrokerAssociationController::class,'Update'])->name('updatebrokerassociation');
-    Route::post('/deletebrokerassociation',[BrokerAssociationController::class,'Delete'])->name('deletebrokerassociation');
 
 	//Product Mode
 
@@ -281,6 +269,7 @@ Route::post('UpdatePropertyClassification', [
 Route::post('DeletePropertyClassification', [
     PropertyClassificationController::class, 'Delete',
 ]);
+	Route::get('GetPropertyClassificationWithoutPagination', [PropertyClassificationController::class, 'GetWithoutPagination']);
 
 //Property Type
 
@@ -293,7 +282,7 @@ Route::post('UpdatePropertyType', [
 Route::post('DeletePropertyType', [
     PropertyTypeController::class, 'Delete',
 ]);
-
+	Route::get('GetPropertyTypeWithoutPagination', [PropertyTypeController::class, 'GetWithoutPagination']);
 
 //Product category
 
@@ -307,10 +296,9 @@ Route::post('DeleteProductCategory', [
     CategoryController::class, 'Delete',
 ]);
 
-
+	Route::get('GetProductCategoryWithoutPagination', [CategoryController::class, 'GetWithoutPagination']);
 
 });
-
 
 Route::get('/getfeatured',[PropertyController::class,'getProperty'])->name('getProperty');
 Route::get('/allproperty',[PropertyController::class,'allProperty'])->name('allProperty');
@@ -322,6 +310,14 @@ Route::post('/saveproperty',[PropertyController::class,'saveproperty'])->name('s
 Route::post('/saveimagesupload',[PropertyController::class,'propertyimagesupload'])->name('propertyimagesupload');
 Route::get('/showallimagesvideo',[PropertyController::class,'showallimagesvideo'])->name('showallimagesvideo');
 
+Route::post('/propertyimagesisDefault',[PropertyController::class,'propertyimagesisDefault'])->name('propertyimagesisDefault');
+Route::post('/propertyamenitiesupdate',[PropertyController::class,'propertyamenitiesupdate'])->name('propertyamenitiesupdate');
 Route::get('/agentapi',[AgentController::class,'agentapi'])->name('agentapi');
 Route::get('/allagents',[AgentController::class,'allagents'])->name('allagents');
 Route::get('/singleagents/{slug?}',[AgentController::class,'singleagents'])->name('singleagents');
+
+
+
+
+
+//web end

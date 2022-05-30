@@ -384,12 +384,44 @@ public function  deleteproperty(Request  $request){
     }
     public  function  showallimagesvideo(Request  $request){
         $dbimage=DB::table('property_images')->where('property_id',$request->property_id)
-            ->where('type','Image')
+
             ->get();
-        $dbvideo=DB::table('property_images')->where('property_id',$request->property_id)
-            ->where('type','Video')
-            ->get();
-        return response()->json(['Image'=>$dbimage,'Video'=>$dbvideo], 200);
+
+        return response()->json(['resultdata' => $dbimage], 200);
+    }
+
+    public function  propertyimagesisDefault(Request $request){
+        $dbimage=DB::table('property_images')->where('property_id',$request->property_id)
+         ->where('id',$request->image_id);
+
+        if($dbimage){
+            $dbimage->update([
+               'property_images.isDefault'=>$request->isDefault
+            ]);
+        }
+        $isDefault=DB::table('property_images')->where('property_id',$request->property_id)
+            ->where('id',$request->image_id)->first();
+        return response()->json(['isDefault' => $isDefault->isDefault], 200);
+
+    }
+
+    public function  propertyamenitiesupdate(Request  $request){
+        $checkeddata=[];
+    $masteramenities=DB::table('master_amenities')->where('status','active')->get();
+    $mappedamenities=DB::table('master_amenities')
+        ->join('property_amenities','property_amenities.property_id','=','master_amenities.id')
+        ->where('property_amenities.property_id',$request->property_id)
+        ->where('master_amenities.status','active')
+->get();
+        foreach ($mappedamenities as $value) {
+            array_push($checkeddata, [
+                'property_id'=>$value->property_id,
+                'amenities_id'=>$value->amenities_id,
+                'status'=>$value->status,
+                'checked'=>'checked'
+            ]);
+        }
+    return response()->json([$masteramenities,$checkeddata]);
     }
 
 
