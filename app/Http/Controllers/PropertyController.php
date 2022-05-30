@@ -211,8 +211,8 @@ public function  allproperty(Request  $request){
         'property.year','property.freewifi','property.exteriour','property.kitchen','property.isFeatured','property.agent_id','property.agri_type','property.rental_price_asked','property.minimum_rental_period_rent',
         'property.car_spaces_rent','property.date_of_month_rent_due','property.period_can_extend','property.car_spaces_rent','property.date_rental_started','property.current_rental_expires','property.rental_switch_on'
     ,'property.sale_price','property.sale_switch_on','property.price_per_sq_m','property.car_spaces_uncovered_property','property.garage_spaces_covered_property'
-    ,'property.minimum_rental_period_sale','property.fireplace','property.swimming_pool'])
-//        ->join('property_images','property_images.property_id','=','property.id')
+    ,'property.minimum_rental_period_sale','property.fireplace','property.swimming_pool','property_images.images_video'])
+        ->join('property_images','property_images.property_id','=','property.id')
         ->join('users','users.user_id','=','property.agent_id')
         ->join('property_classification','property_classification.property_classification_id','=','property.property_classification_id')
         ->join('product_category','product_category.product_category_id','=','property.product_category_id')
@@ -222,11 +222,11 @@ public function  allproperty(Request  $request){
         ->join('subdivisions','subdivisions.subdivision_id','=','property.subdivision_id')
         ->join('town','town.town_id','=','property.town_id')
         ->join('barangay','barangay.barangay_id','=','property.barangay_id')
-//       ->where('property_images.isDefault',true)
-//        ->where('property_images.type','Image')
+       ->where('property_images.isDefault',true)
+        ->where('property_images.type','Image')
         ->orderBy($sortColumn, $sortOrder)
         ->paginate($itemsPerPage);
-
+//          ->count();
 
     return response()->json(['resultData' => $getQuery], 200);
 }
