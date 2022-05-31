@@ -408,26 +408,63 @@ class PropertyController extends Controller
 
     }
 
-    public function  propertyamenitiesupdate(Request  $request){
-        $checkeddata=[];
+    public function  masterpropertyamenities(Request  $request){
+
         $masteramenities=DB::table('master_amenities')->where('status','active')->get();
-        $mappedamenities=DB::table('master_amenities')
-            ->join('property_amenities','property_amenities.property_id','=','master_amenities.id')
+
+        return response()->json(['resultdata'=>$masteramenities]);
+    }
+
+    public function  singlepropertyamenities(Request $request){
+                $mappedamenities=DB::table('master_amenities')
+            ->join('property_amenities','property_amenities.amenities_id','=','master_amenities.id')
             ->where('property_amenities.property_id',$request->property_id)
             ->where('master_amenities.status','active')
             ->get();
-        foreach ($mappedamenities as $value) {
-            array_push($checkeddata, [
-                'property_id'=>$value->property_id,
-                'amenities_id'=>$value->amenities_id,
-                'status'=>$value->status,
-                'checked'=>'checked'
-            ]);
-        }
-        return response()->json([$masteramenities,$checkeddata]);
+        return response()->json(['resultdata'=> $mappedamenities]);
     }
 
+    public function  propertyamenitiesupdate(Request  $request)
+    {
+        $getamenities = DB::table('property_amenities')
+
+            ->where('property_amenities.property_id', $request->property_id)
+            ->where('property_amenities.status', 'active')->get();
+
+     if(count($getamenities)==0) {
+         foreach ($request->amenities_id as $amenities) {
+             $saveQuery1 = DB::table('property_amenities')->insertGetId(
+                 [
+
+                     'property_id' => $request->property_id,
+                     'amenities_id' => $amenities,
+                     'status' => 'Active'
+
+                 ]);
+         }
+         return response()->json(['message' => 'property amenities updated']);
+     }
+     else {
+         $saveQuery12 = DB::table('property_amenities')->where('property_amenities.property_id', $request->property_id)
+             ->delete();
+         if ($saveQuery12) {
+         foreach ($request->amenities_id as $amenities) {
+
+                 $saveQuery1 = DB::table('property_amenities')->insertGetId(
+                     [
+
+                         'property_id' => $request->property_id,
+                         'amenities_id' => $amenities,
+                         'status' => 'Active'
+
+                     ]);
+
+         }
+     }
+         return response()->json(['message' => 'property amenities updated']);
+     }
 
 
+    }
 
 }

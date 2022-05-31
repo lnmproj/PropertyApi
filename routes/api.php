@@ -311,12 +311,12 @@ Route::post('/saveimagesupload',[PropertyController::class,'propertyimagesupload
 Route::get('/showallimagesvideo',[PropertyController::class,'showallimagesvideo'])->name('showallimagesvideo');
 
 Route::post('/propertyimagesisDefault',[PropertyController::class,'propertyimagesisDefault'])->name('propertyimagesisDefault');
-Route::post('/propertyamenitiesupdate',[PropertyController::class,'propertyamenitiesupdate'])->name('propertyamenitiesupdate');
+Route::get('/singlepropertyamenities',[PropertyController::class,'singlepropertyamenities'])->name('singlepropertyamenities');
 Route::get('/agentapi',[AgentController::class,'agentapi'])->name('agentapi');
 Route::get('/allagents',[AgentController::class,'allagents'])->name('allagents');
 Route::get('/singleagents/{slug?}',[AgentController::class,'singleagents'])->name('singleagents');
-
-
+Route::get('/masterpropertyamenities',[PropertyController::class,'masterpropertyamenities'])->name('masterpropertyamenities');
+Route::post('/propertyamenitiesupdate',[PropertyController::class,'propertyamenitiesupdate'])->name('propertyamenitiesupdate');
 
 
 
