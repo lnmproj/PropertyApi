@@ -195,7 +195,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         UserSkillsController::class, 'Delete'
     ]);
     // Subdivision
-Route::get('GetSubdivisionWithoutPagination', [SubdivisionController::class, 'GetWithoutPagination']);
+
 
 
 // Barangay
@@ -317,7 +317,9 @@ Route::get('/allagents',[AgentController::class,'allagents'])->name('allagents')
 Route::get('/singleagents/{slug?}',[AgentController::class,'singleagents'])->name('singleagents');
 Route::get('/masterpropertyamenities',[PropertyController::class,'masterpropertyamenities'])->name('masterpropertyamenities');
 Route::post('/propertyamenitiesupdate',[PropertyController::class,'propertyamenitiesupdate'])->name('propertyamenitiesupdate');
-
-
-
+Route::get('/getsubdivision', [SubdivisionController::class, 'Get']);
+Route::post('/savesubdivision', [SubdivisionController::class, 'Save']);
+Route::post('/updatesubdivision', [SubdivisionController::class, 'Update']);
+Route::post('/deletesubdivision', [SubdivisionController::class, 'Delete']);
+Route::get('GetSubdivisionWithoutPagination', [SubdivisionController::class, 'GetWithoutPagination']);
 //web end

@@ -13,33 +13,58 @@ class SubdivisionController extends Controller
     public function Get(Request $request)
     {
 
+
         $itemsPerPage = $request->itemsPerPage;
         $sortColumn = $request->sortColumn;
         $sortOrder = $request->sortOrder;
         $searchText = $request->searchText;
+        $getQuery = DB::table("subdivisions as t1")
+            ->leftJoin('province', 't1.province_id', '=', 'province.province_id')
+            ->leftJoin('town', 't1.town_id', '=', 'town.town_id')
+            ->leftJoin('barangay as t2', 't1.barangay_id', '=', 't2.barangay_id')
 
-        $getQuery = DB::table("user_skills")->select(['user_skills_id', 'user_skills', DB::raw("IF(user_skills_status = 'Active', 'Active','Inactive')as user_skills_status")])
+            ->
+            select(['t1.subdivision_id', 't1.subdivision_name', DB::raw("IF(t1.subdivision_status = 'Active', 'Active','Inactive')as subdivision_status"),
+                't1.zip_code','t1.province_id','t1.town_id','t1.barangay_id','t1.town_id','province.province_name',
 
-            ->where('user_skills', 'like', '%' . $searchText . '%')->orderBy($sortColumn, $sortOrder)
+                DB::raw("GROUP_CONCAT(t2.barangay_name) as adjacent_barangay"),
+                DB::raw("GROUP_CONCAT(t2.barangay_id) as adjacent_barangay_id"),
+                DB::raw('DATE_FORMAT(t1.created_at, "%d-%m-%Y") as created_at', "%d-%m-%Y"),
+
+            ])
+
+            ->where('t1.subdivision_name', 'like', '%' . $searchText . '%')->orderBy($sortColumn, $sortOrder)
             ->paginate($itemsPerPage);
+
         return response()->json(['resultData' => $getQuery], 200);
+
     }
     //save user_skills
     public function Save(Request $request)
     {
-
-        $Name = trim($request->Name);
+        $barangay_id = $request->barangay_id;
+        $town_id = $request->town_id;
+        $province_id = $request->province_id;
+        $zip_code = $request->zipcode;
+        $subdivision_name = $request->subdivision_name;
         $created_by = $request->created_by;
+        $adjacent_subdivision=$request->adjacent_subdivision;
 
-        $saveQuery = DB::table('user_skills')->insertGetId(
+        $saveQuery = DB::table('subdivisions')->insertGetId(
             [
-                'user_skills' => $Name,
-                'created_by' => $created_by,
+                'barangay_id'=> $barangay_id,
+                'town_id' => $town_id,
+                'province_id' =>  $province_id,
+                'zip_code' =>$zip_code,
+                'subdivision_name' => $subdivision_name,
+//                'subdivision_status' => $request->subdivision_status,
+                'created_by' =>  $created_by,
+                'adjacent_subdivision' =>  $adjacent_subdivision
 
             ]
         );
         if ($saveQuery > 0) {
-            return response()->json(['message' => $Name . ' saved successfully'], 200);
+            return response()->json(['message' =>'Subdivision saved successfully'], 200);
         }
     }
 
@@ -48,31 +73,42 @@ class SubdivisionController extends Controller
     {
 
         $Name = $request->Name;
-        $Id = $request->Id;
-        $isActive = $request->isActive;
-        $updated_by = $request->updated_by;
-        $updateQuery = DB::table('user_skills')
-            ->where('user_skills_id', $Id)
-            ->update([
-                'user_skills' => $Name,
-                'user_skills_status' => $isActive,
-                'updated_at' => now(),
-                'updated_by' => $updated_by,
+        $Id = $request->subdivision_id;
 
+        $updated_by = $request->updated_by;
+        $barangay_id = $request->barangay_id;
+        $town_id = $request->town_id;
+        $province_id = $request->province_id;
+        $zip_code = $request->zipcode;
+        $subdivision_name = $request->subdivision_name;
+        $created_by = $request->created_by;
+        $adjacent_subdivision=$request->adjacent_subdivision;
+        $updateQuery = DB::table('subdivisions')
+            ->where('subdivision_id', $Id)
+            ->update([
+                'barangay_id'=> $barangay_id,
+                'town_id' => $town_id,
+                'province_id' =>  $province_id,
+                'zip_code' =>$zip_code,
+                'subdivision_name' => $subdivision_name,
+                'subdivision_status' => $request->subdivision_status,
+                'created_by' =>  $created_by,
+                'adjacent_subdivision' =>  $adjacent_subdivision,
+                 'updated_by' =>  $updated_by,
             ]);
-        if ($updateQuery > 0) {
+        if ($updateQuery) {
 
             return response()->json(['message' => $Name . ' updated successfully'], 200);
         }
     }
 
-    //Delete user_skills
+    //Delete
     public function Delete(Request $request)
     {
 
-        $Id = $request->Id;
-        $deleteQuery = DB::table('user_skills')->where('user_skills_id', $Id)->delete();
-        if ($deleteQuery > 0) {
+        $Id = $request->subdivision_id;
+        $deleteQuery = DB::table('subdivisions')->where('subdivision_id', $Id)->delete();
+        if ($deleteQuery) {
 
             return response()->json(['message' => 'Item deleted successfully'], 200);
         }
@@ -83,11 +119,17 @@ class SubdivisionController extends Controller
     public function GetWithoutPagination(Request $request)
     {
 
-        $barangayId = $request->barangayId;
-        $townId = $request->townId;
-        $provinceId = $request->provinceId;
+        $Name = $request->Name;
+        $Id = $request->subdivision_id;
 
-        $status = $request->status;
+        $updated_by = $request->updated_by;
+        $barangay_id = $request->barangay_id;
+        $town_id = $request->town_id;
+        $province_id = $request->province_id;
+        $zip_code = $request->zipcode;
+        $subdivision_name = $request->subdivision_name;
+        $created_by = $request->created_by;
+        $adjacent_subdivision=$request->adjacent_subdivision;
         $getQuery = DB::table("subdivisions")->select(['subdivision_id', 'subdivision_name'])
             ->orderBy('subdivision_id');
         if (isset($barangayId) && isset($townId) && isset($provinceId)) {
