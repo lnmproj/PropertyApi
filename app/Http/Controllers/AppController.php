@@ -159,7 +159,13 @@ class AppController extends Controller
         try {
             $email = $request->email;
             $password = $request->password;
+
+
             if (Auth::attempt(['user_email' => $email, 'password' => $password, 'user_status' => 'Active'])) {
+                $query=DB::table('users')->where('user_email',$email)->first();
+                if($query->email_verification==false){
+                    return response()->json(['result' => 'error', 'message' => 'Please Activate your email']);
+                }
 
                 // Login Success
                 $token = Auth::user()->createToken(random_int(100000, 999999))->plainTextToken;
@@ -171,9 +177,9 @@ class AppController extends Controller
                 $userData['last_name'] = Auth::user()->last_name;
                 $userData['full_name'] = Auth::user()->full_name;
 				$userData['user_email'] = Auth::user()->user_email;
-				
-				
-				 
+
+
+
 				$menuData= DB::table('users')
 					->join('test_menu_permission', 'test_menu_permission.role_id', '=', 'users.role_id')
 					->join('test_menu', 'test_menu_permission.menu_id', '=', 'test_menu.menu_id')
@@ -186,8 +192,8 @@ class AppController extends Controller
 					->join('roles', 'test_menu_permission.role_id', '=', 'roles.id')
                     ->where('user_id', Auth::user()->user_id)
 					->select('roles.name')->distinct()->get();
-               
-				
+
+
 
                 return response()->json([
                     'result' => 'success', 'message' => 'Login Success', 'token' => $token,
@@ -213,7 +219,7 @@ class AppController extends Controller
             $userData['first_name'] = Auth::user()->first_name;
             $userData['last_name'] = Auth::user()->last_name;
             $userData['full_name'] = Auth::user()->full_name;
-       
+
 
             return response()->json([
                 'result' => 'success', 'userData' => $userData, 'userRole' => $userRoles,
