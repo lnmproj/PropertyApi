@@ -12,7 +12,7 @@ use Exception;
 
 class AgriTypeController extends Controller
 {
-   
+
 
     // get all agri_type
     public function Get(Request $request)
@@ -36,14 +36,20 @@ class AgriTypeController extends Controller
 
 
         $agri_type_name = trim($request->agri_type_name);
-        $saveQuery = DB::table('agri_type')->insertGetId(
-            [
-                'agri_type_name' => $agri_type_name,
+        $agricount = DB::table('agri_type')->where('agri_type_name',   $agri_type_name )->count();
+        if($agricount>0){
+            return response()->json(['message' => 'duplicate Agri  name'], 200);
+        }
+        else {
+            $saveQuery = DB::table('agri_type')->insertGetId(
+                [
+                    'agri_type_name' => $agri_type_name,
 
-            ]
-        );
-        if ($saveQuery > 0) {
-            return response()->json(['message' => 'Agri Type saved successfully'], 200);
+                ]
+            );
+            if ($saveQuery > 0) {
+                return response()->json(['message' => 'Agri Type saved successfully'], 200);
+            }
         }
     }
 

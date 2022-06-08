@@ -27,7 +27,7 @@ class TownController extends Controller
             DB::raw("GROUP_CONCAT(t2.town_name) as adjacent_town"),
               DB::raw("GROUP_CONCAT(t2.town_id) as adjacent_town_id"),
             DB::raw('DATE_FORMAT(t1.created_at, "%d-%m-%Y") as created_at', "%d-%m-%Y"),
-            'province.province_id', 'province.province_name', 
+            'province.province_id', 'province.province_name',
 
         ])
 
@@ -43,19 +43,23 @@ class TownController extends Controller
         $provinceId = $request->provinceId;
         $adjacentTown = $request->adjacentTown;
         $createdBy = $request->createdBy;
+        $town = DB::table('town')->where('town_name', $request->townName)->count();
+        if ($town>0) {
+            return response()->json(['message' => 'Duplicate town name exits'], 200);
+        } else {
+            $saveQuery = DB::table('town')->insertGetId(
+                [
+                    'town_name' => $townName,
+                    'is_town_city' => $isTownCity,
+                    'province_id' => $provinceId,
+                    'adjacent_town' => $adjacentTown,
+                    'created_by' => $createdBy,
 
-        $saveQuery = DB::table('town')->insertGetId(
-            [
-                'town_name' => $townName,
-                'is_town_city' => $isTownCity,
-                'province_id' => $provinceId,
-                'adjacent_town' => $adjacentTown,
-                'created_by' => $createdBy,
-
-            ]
-        );
-        if ($saveQuery > 0) {
-           return response()->json(['message' => 'Town saved successfully'], 200);
+                ]
+            );
+            if ($saveQuery > 0) {
+                return response()->json(['message' => 'Town saved successfully'], 200);
+            }
         }
     }
 
